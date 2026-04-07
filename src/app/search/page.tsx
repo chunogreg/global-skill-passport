@@ -6,9 +6,17 @@ export default function SearchPage() {
   const [hasSearched, setHasSearched] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const parseBoolean = (value: FormDataEntryValue | null) => {
+    if (value === "true") return true;
+    if (value === "false") return false;
+    return null;
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const formData = new FormData(e.target);
+
+    // const rawIelts = formData.get("ielts");
 
     const body = {
       discipline: formData.get("discipline"),
@@ -16,18 +24,13 @@ export default function SearchPage() {
       degree: formData.get("degree"),
       budget: Number(formData.get("budget")) || null,
 
-      ielts:
-        formData.get("ielts") === "" ? null : formData.get("ielts") === true,
-      applicationFee:
-        formData.get("applicationFee") === ""
-          ? null
-          : formData.get("applicationFee") === true,
+      ielts: parseBoolean(formData.get("ielts")),
+      applicationFee: parseBoolean(formData.get("applicationFee")),
 
-      scholarship:
-        formData.get("scholarship") === ""
-          ? null
-          : formData.get("scholarship") === true,
+      scholarships: parseBoolean(formData.get("scholarships")),
     };
+
+    console.log("BODY   ", body);
 
     setLoading(true);
 
@@ -81,9 +84,9 @@ export default function SearchPage() {
           <option value="Finland">Finland</option>
         </select>
 
-        <select name="Degree" className="border p-2 w-full rounded">
-          <option value="">Degree Type</option>
-          <option value="Bachelors">Undergraduate</option>
+        <select name="degree" className="border p-2 w-full rounded">
+          <option value="">Degree-Type</option>
+          <option value="Bachelor">Bachelor</option>
           <option value="Masters">Masters</option>
           <option value="PhD">PhD</option>
         </select>
@@ -152,7 +155,6 @@ export default function SearchPage() {
             <p className="mt-3 text-gray-600">{uni.country}</p>
 
             <div>
-              {" "}
               <p className="mt-3">
                 <strong>Discipline:</strong> {uni.discipline}
               </p>

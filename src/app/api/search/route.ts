@@ -20,21 +20,27 @@ export async function POST(req: Request) {
     if (body.country) {
       query = query.ilike("country", `%${body.country.trim()}%`);
     }
-    // if (degree) {
-    //   query = query.eq("degree", degree);
+    if (body.degree && body.degree.trim() !== "") {
+      query = query.eq("degree", body.degree.trim());
+    }
+    // if (body.degree) {
+    //   query = query.eq("degree", body.degree);
     // }
+
+    // if (body.degree) {
+    //   query = query.ilike("degree", `%${body.degree.trim()}%`);
+    // }
+
     if (body.budget) {
       query = query.lte("tuition", body.budget);
     }
-    if (body.ielts !== null) {
+    if (body.ielts === true || body.ielts === false) {
       query = query.eq("ielts_required", body.ielts);
     }
-
-    if (body.applicationFee !== null) {
+    if (body.applicationFee === true || body.applicationFee === false) {
       query = query.eq("application_fee", body.applicationFee);
     }
-
-    if (body.scholarships !== null) {
+    if (body.scholarships === true || body.scholarships === false) {
       query = query.eq("scholarships", body.scholarships);
     }
 
