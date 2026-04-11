@@ -1,36 +1,42 @@
 "use client";
+import { NextResponse } from "next/server";
 import { useState } from "react";
+import { University } from "../types/university";
+import { SearchBody } from "../types/search";
 
 export default function SearchPage() {
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<University[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const parseBoolean = (value: FormDataEntryValue | null) => {
-    if (value === "true") return true;
-    if (value === "false") return false;
-    return null;
-  };
+  // const parseBoolean = (value: FormDataEntryValue | null) => {
+  //   if (value === "true") return true;
+  //   if (value === "false") return false;
+  //   return null;
+  // };
 
-  const handleSubmit = async (e: any) => {
+  interface myEvent {
+    target: HTMLFormElement;
+    preventDefault: () => void;
+  }
+
+  const handleSubmit = async (e: myEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target);
 
-    // const rawIelts = formData.get("ielts");
-
     const body = {
-      discipline: formData.get("discipline"),
-      country: formData.get("country"),
-      degree: formData.get("degree"),
+      discipline: formData.get("discipline") as string,
+      country: formData.get("country") as string,
+      degree: formData.get("degree") as string,
       budget: Number(formData.get("budget")) || null,
+      ielts: formData.get("ielts") === "on",
 
-      ielts: parseBoolean(formData.get("ielts")),
-      applicationFee: parseBoolean(formData.get("applicationFee")),
+      applicationFee: formData.get("applicationFee") === "on",
 
-      scholarships: parseBoolean(formData.get("scholarships")),
+      scholarships: formData.get("scholarships") === "on",
+
+      // scholarships: parseBoolean(formData.get("scholarships")),
     };
-
-    console.log("BODY   ", body);
 
     setLoading(true);
 
@@ -39,18 +45,49 @@ export default function SearchPage() {
       headers: { "content-type": "application/json" },
       body: JSON.stringify(body),
     });
-    setLoading(false);
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error("Request failed: ", res.status, errorText);
+    const response = await res.json();
+    const data = response.data;
+
+    console.log("DATA is here: ", data);
+
+    if (!Array.isArray(data)) {
+      console.error("Data is not array:", data);
       return;
     }
 
-    const data = await res.json();
-    setResults(data.data);
+    setLoading(false);
+
+    const calculateScore = (university: University, body: SearchBody) => {
+      let score = 0;
+
+      if (body.budget && university.tuition <= body.budget) {
+        score += 3;
+      }
+      if (body.ielts === false && university.ielts_required === false) {
+        score += 2;
+      }
+      if (body.scholarships === true && university.scholarships === true) {
+        score += 2;
+      }
+
+      return score;
+    };
+
+    const resultsWithScore = data.map((uni: University) => ({
+      ...uni,
+      score: calculateScore(uni, body),
+    }));
+
+    console.log("WITH SCORE: ", body);
+    resultsWithScore.sort((a: University, b: University) => b.score - a.score);
+
+    //setResults(data);
+    setResults(resultsWithScore);
 
     setHasSearched(true);
+
+    return NextResponse.json({ data: resultsWithScore });
   };
 
   return (
@@ -66,6 +103,22 @@ export default function SearchPage() {
           placeholder="Discipline (e.g civil engineering)"
           className="border p-2 w-full rounded"
         />
+        <select name="discipline" className="border p-2 w-full rounded">
+          <option value="">Select Discipline</option>
+          <option value="Canada">Canada</option>
+          <option value="UK">UK</option>
+          <option value="Germany">Germany</option>
+          <option value="Spain">Spain</option>
+          <option value="China">China</option>
+          <option value="Japan">Japan</option>
+          <option value="USA">USA</option>
+          <option value="France">France</option>
+          <option value="Italy">Italy</option>
+          <option value="UAE">UAE</option>
+          <option value="Egypt">Egypt</option>
+          <option value="Quatar">Quatar</option>
+          <option value="Finland">Finland</option>
+        </select>
 
         <select name="country" className="border p-2 w-full rounded">
           <option value="">Select Country</option>
@@ -90,7 +143,7 @@ export default function SearchPage() {
           <option value="Masters">Masters</option>
           <option value="PhD">PhD</option>
         </select>
-
+        {/* 
         <select name="ielts" className="border p-2 w-full rounded">
           <option value="">IELTS Requirement</option>
           <option value="true">IELT or TOEFL required</option>
@@ -107,31 +160,39 @@ export default function SearchPage() {
           <option value="">Scholarship</option>
           <option value="true">Available</option>
           <option value="false"> Not Available</option>
-        </select>
+        </select> */}
 
-        {/* <input
-          name="country"
-          placeholder="Country"
-          className="border p-2 w-full"
-        />
-*/}
         <input
           name="budget"
           type="number"
           placeholder="Max Budget (USD)"
-          className="border p-2 w-full rounded"
+          className="border p-2 mb-3 w-full rounded"
         />
 
-        <select name="sort" className="border p-2 w-full rounded mt-2">
+        <label className="flex items-center cursor-pointer  ">
+          Only show universities where IELTS or TOEFL is not mandatory
+          <input type="checkbox" name="ielts" className="w-5 h-5 ml-2" />
+        </label>
+
+        <label className="flex items-center cursor-pointer m-0 p-0">
+          Only show universities where application fee is not required
+          <input
+            type="checkbox"
+            name="applicationFee"
+            className="w-5 h-5 ml-2 "
+          />
+        </label>
+
+        <label className="flex items-center cursor-pointer m-0">
+          Only show universities with scholarships
+          <input type="checkbox" name="scholarships" className="w-5 h-5 ml-2" />
+        </label>
+
+        <select name="sort" className="border p-2 w-full rounded mt-3">
           <option value="">Sort By</option>
           <option value="tuition_asc">Cheapeast Tuition</option>
           <option value="tuition_desc"> Most Expensive</option>
         </select>
-
-        {/* <label className="flex items-center gap-2">
-          <input type="checkbox" name="ielts" value="false" />
-          No IELTS required
-        </label> */}
 
         <button
           disabled={loading}
@@ -176,9 +237,11 @@ export default function SearchPage() {
                 <strong>Scholarships:</strong>{" "}
                 {uni.scholarships ? " Yes" : " No"}
               </p>
-              <p className="mt-3">
+              <p>Score: {uni.score}</p>
+
+              {/* <p className="mt-3">
                 <strong>Cost of Living:</strong> {uni.cost_of_living}/month
-              </p>
+              </p> */}
             </div>
           </div>
         ))}

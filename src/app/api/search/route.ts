@@ -34,14 +34,14 @@ export async function POST(req: Request) {
     if (body.budget) {
       query = query.lte("tuition", body.budget);
     }
-    if (body.ielts === true || body.ielts === false) {
-      query = query.eq("ielts_required", body.ielts);
+    if (body.ielts === true) {
+      query = query.eq("ielts_required", false);
     }
-    if (body.applicationFee === true || body.applicationFee === false) {
-      query = query.eq("application_fee", body.applicationFee);
+    if (body.applicationFee === true) {
+      query = query.eq("application_fee", false);
     }
-    if (body.scholarships === true || body.scholarships === false) {
-      query = query.eq("scholarships", body.scholarships);
+    if (body.scholarships === true) {
+      query = query.eq("scholarships", true);
     }
 
     if (body.sort === "tuition_asc") {
