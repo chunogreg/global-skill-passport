@@ -1,8 +1,19 @@
 "use client";
 
+//import { useState } from "react";
+
 const AdminPage = () => {
-  const handleSubmit = async (e: any) => {
+  // const [text, setText] = useState("");
+
+  interface myEvent {
+    //currentTarget: HTMLFormElement;
+    target: HTMLFormElement;
+    preventDefault: () => void;
+  }
+
+  const handleSubmit = async (e: myEvent) => {
     e.preventDefault();
+
     const formData = new FormData(e.target);
 
     const body = {
@@ -11,8 +22,17 @@ const AdminPage = () => {
       city: formData.get("city"),
       degree: formData.get("degree"),
       tuition: formData.get("tuition"),
-      ielts_required: formData.get("ielts") === "on",
-      scholarships: formData.get("scholarships") === "on",
+      discipline: formData.get("discipline"),
+      currency: formData.get("currency"),
+      source: formData.get("source"),
+      ielts_min_score: formData.get("ielts_min_score"),
+      application_fee_amount: formData.get("application_fee_amount"),
+      application_start_date: formData.get("application_start_date"),
+      application_end_date: formData.get("application_end_date"),
+      scholarship_amount: formData.get("scholarship_amount"),
+
+      // ielts_required: formData.get("ielts") === "on",
+      // scholarships: formData.get("scholarships") === "on",
 
       // discipline: formData.get("discipline"),
 
@@ -32,48 +52,124 @@ const AdminPage = () => {
     // }
 
     //const data = await res.json();
+
+    // setText("");
+    e.target.reset();
   };
 
   return (
     <form onSubmit={handleSubmit} className="mt-6 space-x-4">
-      <div>
+      <div className="ml-14">
         <input
+          type="text"
           className="border p-2 w-200 h-7 mb-2 rounded"
           name="name"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
           placeholder="University name"
         />
         <input
+          type="text"
           className="border p-2 w-200 h-7 mb-2 rounded"
           name="country"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
           placeholder="Country"
         />
         <input
+          type="text"
           className="border p-2 w-200 h-7 mb-2  rounded"
           name="city"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
           placeholder="City"
         />
         <input
+          type="text"
           className="border p-2 w-200 h-7 mb-2 rounded"
           name="tuition"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
           placeholder="Tuition"
         />
-        <label className="flex items-center cursor-pointer  ">
-          IELTS or TOEFL Required
-          <input className="w-5 h-5 ml-2" type="checkbox" name="ielts" />
-        </label>
-        <label className="flex items-center cursor-pointer  ">
-          Scholarships Available
-          <input className="w-5 h-5 ml-2" type="checkbox" name="ielts" />
-        </label>
-        <label className="flex items-center cursor-pointer  ">
-          Application fee Required
-          <input
-            className="w-5 h-5 ml-2"
-            type="checkbox"
-            name="applicationFee"
-          />
-        </label>
-        <button type="submit" className="bg-blue-500 text-white mt-4 px-4 py-2">
+
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="degree"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="Degree of Study"
+        />
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="discipline"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="Discipline"
+        />
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="currency"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="Currency"
+        />
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="source"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="Source"
+        />
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="ielts_min_score"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="IELTS or TOEFL minimum score"
+        />
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="application_fee_amount"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="Application fee amount"
+        />
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="application_start_date"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="Application start date"
+        />
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="application_end_date"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="Application end date"
+        />
+        <input
+          type="text"
+          className="border p-2 w-200 h-7 mb-2 rounded"
+          name="scholarship_amount"
+          // value={text}
+          // onChange={(e) => setText(e.target.value)}
+          placeholder="Scholarship amount"
+        />
+        <br />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white mt-4 px-4 py-2 active:scale-110 "
+        >
           Add
         </button>
       </div>

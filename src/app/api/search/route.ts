@@ -4,6 +4,9 @@ import { supabase } from "@/lib/supabase";
 // }
 
 export async function POST(req: Request) {
+  // interface Err {
+  //   err: string;
+  // }
   try {
     const body = await req.json();
     console.log("BODY", body);
@@ -46,12 +49,10 @@ export async function POST(req: Request) {
 
     if (body.sort === "tuition_asc") {
       query = query.order("tuition", { ascending: true });
-    }
-
-    if (body.sort === "tuition_desc") {
+    } else if (body.sort === "tuition_desc") {
       query = query.order("tuition", { ascending: false });
     }
-
+    console.log("SORT VALUE:", body.sort);
     const { data, error } = await query;
 
     console.log("DATA: ", data);
@@ -63,10 +64,10 @@ export async function POST(req: Request) {
     }
 
     return Response.json({ data });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("FULL ERROR: ", err);
     return Response.json(
-      { error: err.message || "Something went wrong" },
+      { error: (err as Error).message || "Something went wrong" },
       { status: 400 },
     );
   }

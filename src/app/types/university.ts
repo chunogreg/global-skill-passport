@@ -8,8 +8,11 @@ export interface University {
   discipline: string;
   tuition: number;
   ielts_required: boolean;
+  ielts_min_score: number;
   applicationFee: boolean;
+  application_fee_amount: number;
   scholarships: boolean;
+  scholarship_amount: number;
   application_start_date?: string;
   application_end_date: string;
   url: string;
@@ -18,4 +21,5 @@ export interface University {
   ielts: boolean;
   application_fee: boolean;
   body: object;
+  explanation: Array<string>;
 }
