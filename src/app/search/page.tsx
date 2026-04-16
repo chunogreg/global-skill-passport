@@ -93,6 +93,9 @@ export default function SearchPage() {
         if (university.scholarship_amount >= 5000) {
           score += 1;
         }
+        if (university.scholarship_amount >= 10000) {
+          score += 1;
+        }
       }
 
       return score;
@@ -117,7 +120,9 @@ export default function SearchPage() {
       }
 
       if (uni.scholarship_amount > 0) {
-        reasons.push(`Scholarship available (${uni.scholarship_amount})`);
+        reasons.push(
+          `Scholarship: Up to ($ ${uni.scholarship_amount.toLocaleString("en-us")} )`,
+        );
       }
 
       return reasons;
@@ -129,7 +134,7 @@ export default function SearchPage() {
       explanation: getExplanation(uni, body),
     }));
 
-    return NextResponse.json({ data: resultsWithScore });
+    //return NextResponse.json({ data: resultsWithScore });
 
     console.log("WITH SCORE: ", body);
     resultsWithScore.sort((a: University, b: University) => b.score - a.score);
@@ -138,23 +143,25 @@ export default function SearchPage() {
     setResults(resultsWithScore);
 
     setHasSearched(true);
+    return NextResponse.json({ data: resultsWithScore });
   };
 
   return (
     <main className="p-10 max-w-4xl max-auto ">
-      <h1 className="text-2xl font-bold">Find Universities Abroud</h1>
+      <h1 className="text-2xl font-bold">Find Universities Abroad</h1>
       <p className="text-center text-gray-600 mt-2">
         Discover schools that match your budget and qualifications
       </p>
 
-      <form onSubmit={handleSubmit} className="mt-6 space-x-4">
-        {/* <input
+      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <label>Discipline</label>
+        <select
           name="discipline"
-          placeholder="Discipline (e.g civil engineering)"
-          className="border p-2 w-full rounded"
-        /> */}
-        <select name="discipline" className="border p-2 w-full rounded">
-          <option value="">Select Discipline</option>
+          className="border p-2 w-full rounded mb-3 text-gray-600 "
+        >
+          <option value="" className="text-gray-400">
+            Select Discipline
+          </option>
           <option value="History">History</option>
           <option value="Environmental Science">Environmental Science</option>
           <option value="Economics">Economics</option>
@@ -163,39 +170,41 @@ export default function SearchPage() {
           <option value="Nursing">Nursing</option>
           <option value="Computer Science">Computer Science</option>
           <option value="Civil Engineering">Civil Engineering</option>
+          <option value="Mechanical Engineering">Mechanical Engineering</option>
+          <option value="Artificial Intelligence">
+            {" "}
+            Artificial Intelligence{" "}
+          </option>
+          <option value="Cybersecurity">Cybersecurity</option>
         </select>
 
-        <select name="country" className="border p-2 w-full rounded">
-          <option value="">Select Country</option>
+        <label>Country</label>
+        <select
+          name="country"
+          className="border p-2 w-full rounded mb-3  text-gray-600"
+        >
+          <option value="" className="text-gray-600">
+            Select Country
+          </option>
           <option value="Canada">Canada</option>
 
           <option value="USA">USA</option>
+          <option value="Australia">Australia</option>
+          <option value="Germany">Germany</option>
         </select>
 
-        <select name="degree" className="border p-2 w-full rounded">
+        <label>Degree</label>
+        <select
+          name="degree"
+          className="border p-2 w-full rounded mb-3  text-gray-600 "
+        >
           <option value="">Degree-Type</option>
           <option value="Bachelor">Bachelor</option>
           <option value="Masters">Masters</option>
           <option value="PhD">PhD</option>
         </select>
-        {/* 
-        <select name="ielts" className="border p-2 w-full rounded">
-          <option value="">IELTS Requirement</option>
-          <option value="true">IELT or TOEFL required</option>
-          <option value="false"> No IELTS or TOEFL</option>
-        </select>
 
-        <select name="applicationFee" className="border p-2 w-full rounded">
-          <option value="">Application Fee</option>
-          <option value="true">Is required</option>
-          <option value="false"> Not Required</option>
-        </select>
-
-        <select name="scholarships" className="border p-2 w-full rounded">
-          <option value="">Scholarship</option>
-          <option value="true">Available</option>
-          <option value="false"> Not Available</option>
-        </select> */}
+        <label>Budget (USD)</label>
 
         <input
           name="budget"
@@ -203,25 +212,6 @@ export default function SearchPage() {
           placeholder="Max Budget (USD)"
           className="border p-2 mb-3 w-full rounded"
         />
-
-        <label className="flex items-center cursor-pointer  ">
-          Only show universities where IELTS or TOEFL is not mandatory
-          <input type="checkbox" name="ielts" className="w-5 h-5 ml-2" />
-        </label>
-
-        <label className="flex items-center cursor-pointer m-0 p-0">
-          Only show universities where application fee is not required
-          <input
-            type="checkbox"
-            name="applicationFee"
-            className="w-5 h-5 ml-2 "
-          />
-        </label>
-
-        <label className="flex items-center cursor-pointer m-0">
-          Only show universities with scholarships
-          <input type="checkbox" name="scholarships" className="w-5 h-5 ml-2" />
-        </label>
 
         <select name="sort" className="border p-2 w-full rounded mt-3">
           <option value="">Sort By</option>
@@ -243,13 +233,16 @@ export default function SearchPage() {
           No university found, Try adjusting your filters.
         </p>
       )}
-      <div className="flex p-4 mb-2 rounded flex-row mt-2 flex-wrap w-screen">
+      <div className="flex border p-4 rounded-2xl shadow-md mb-4 flex-row mt-2 flex-wrap w-screen">
         {results.map((uni, index) => (
-          <div key={index} className="m-4 p-4 border w-80 ">
-            <h2 className="text-2xl font-semibold text-blue-950">{uni.name}</h2>
+          <div key={index} className="m-4 p-4 border rounded-2xl mb-4 w-68">
+            <h2 className="text-2xl font-bold text-blue-950">{uni.name}</h2>
+            <p className="mt-3 text-gray-500">
+              {" "}
+              {uni.city}, {uni.country}
+            </p>
 
-            <p className="mt-3 text-blue-700 text-2xl ml-7">{uni.country}</p>
-
+            {/*             
             <p className="mt-3">
               <strong>Discipline:</strong> {uni.discipline}
             </p>
@@ -257,29 +250,62 @@ export default function SearchPage() {
               <strong>Degree:</strong> {uni.degree}
             </p>
             <p className="mt-3">
-              <strong>Tuition:</strong> ${uni.tuition}
-            </p>
-            {/* <p className="mt-3">
-              <strong>IELTS or TOEFL required :</strong>
-              {uni.ielts_required ? " Yes" : " No"}
+              <strong>Tuition:</strong> ${" "}
+              {uni.tuition.toLocaleString("en-us")}{" "}
             </p>
             <p className="mt-3">
-              <strong>Application Fee:</strong>
-              {uni.application_fee ? " Yes" : " No"}
+              <strong>IELTS minimum score:</strong> {uni.ielts_min_score}
             </p>
             <p className="mt-3">
-              <strong>Scholarships:</strong> {uni.scholarships ? " Yes" : " No"}
-            </p> */}
-            <p>Score: {uni.score}</p>
-            <p> {uni.score >= 5 ? "⭐ Best Match" : "Good Option"}</p>
-            <ul>
+              <strong>Scholarship:</strong> $
+              {uni.scholarship_amount.toLocaleString("en-us")}
+            </p>
+            <p className="mt-3">
+              <strong>Application Fee: </strong>$ {uni.application_fee_amount}
+            </p>
+            <p className="mt-3">
+              <strong>Application Starts: </strong>
+              {uni.application_start_date}
+            </p>
+            <p className="mt-3">
+              <strong>Application Deadline: </strong>
+              {uni.application_end_date}
+            </p>
+
+            <p className="mt-3">
+              <strong> Apply here:</strong>{" "}
+              <a
+                className="text-blue-500 hover:underline hover:text-amber-600"
+                href={uni.url}
+              >
+                Online application
+              </a>{" "}
+            </p>
+            <br /> */}
+            <p className="mt-2">
+              {uni.score >= 7 ? (
+                <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
+                  ⭐ Best Match
+                </span>
+              ) : uni.score >= 4 ? (
+                " 👍 Good Match"
+              ) : (
+                " ℹ️ Consider "
+              )}
+            </p>
+            <ul className="mt-2 text-sm text-gray-700">
               {uni.explanation.map((item: string, i: number) => (
-                <li key={i}> {item}</li>
+                <li key={i}> ✔ {item}</li>
               ))}
             </ul>
-            {/* <p className="mt-3">
-                <strong>Cost of Living:</strong> {uni.cost_of_living}/month
-              </p> */}
+
+            <div className="mt-3 text-sm">
+              <p>Tuition: $ {uni.tuition.toLocaleString()} / year</p>
+              <p>
+                Cost of Living: $ {uni.cost_of_living.toLocaleString()} / month
+              </p>
+              <p>Application fee: $ {uni.application_fee_amount}</p>
+            </div>
           </div>
         ))}
       </div>
