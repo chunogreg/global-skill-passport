@@ -249,7 +249,6 @@ export default function SearchPage() {
                 {" "}
                 {uni.city}, {uni.country}
               </p>
-
               {/*             
             <p className="mt-3">
               <strong>Discipline:</strong> {uni.discipline}
@@ -306,7 +305,6 @@ export default function SearchPage() {
                   <li key={i}> ✔ {item}</li>
                 ))}
               </ul>
-
               <div className="mt-3 text-sm">
                 <p>Tuition: $ {uni.tuition.toLocaleString()} / year</p>
                 <p>
@@ -315,6 +313,12 @@ export default function SearchPage() {
                 </p>
                 <p>Application fee: $ {uni.application_fee_amount}</p>
               </div>
+              <a href={uni.url}>
+                <p className="text-blue-500 underline mt-3 ml-10">
+                  {" "}
+                  Apply here{" "}
+                </p>
+              </a>{" "}
             </div>
           ))}
         </div>
