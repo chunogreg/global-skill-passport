@@ -1,6 +1,6 @@
 "use client";
-
-import { getCurrentUser, getUserWithRole } from "@/lib/auth";
+//import { getCurrentUser } from "@/lib/auth";
+import { getUserWithRole } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { User } from "@supabase/supabase-js";

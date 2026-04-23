@@ -28,7 +28,7 @@ export const getUserWithRole = async () => {
 
   if (!user) return { user: null, role: null };
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
