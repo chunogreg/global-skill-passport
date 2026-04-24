@@ -1,36 +1,177 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌏 Global Skill Passport
 
-## Getting Started
+A full-stack SaaS application that helps international students find the best universities based on budget, degree, and key admission factors.
 
-First, run the development server:
+---
+
+## 🚀 Live Demo
+
+https://global-skill-passport.vercel.app/
+
+---
+
+## 🎯 Problem
+
+Choosing the right university abroad is difficult due to:
+
+- scattered information across multiple websites
+- inconsistent data formats
+- lack of filtering by real constrains (budget, IELTS, scholarships)
+
+---
+
+## 💡 Solution
+
+Global Skill Passport provides:
+
+- a unified dataset of universities
+- smart filtering based on user preferences
+- a ranking system to recommend best-fit schools
+
+---
+
+## ✨ Features
+
+### 🔍 Saerch & Filtering
+
+- Filter by country, degree, discipline
+- Budget-based filtering
+- Clean UI for quick exploration
+
+---
+
+### ⭐ Smart Ranking System
+
+- Calculates a **Best Match score**
+- Highlights the most suitable university
+- Provides explanation for recommendations
+
+---
+
+### 🛡️ Admin Dashboard
+
+- Protected admin route
+- Role-Based Access Control (RBAC)
+- Add a new university records directly
+
+---
+
+### 🧠 Data Design
+
+- Structured database for:
+  - universities
+  - cost
+  - IELTS / TOEFL
+  - scholarships
+  - application links
+
+  ***
+
+### 🌐 Real Data Handling
+
+- Manual dataset curation (30+ real records)
+- USD normalization for fair comparison
+- Source links for transparency
+
+---
+
+## 🧱 Teck Stack
+
+### Frontend
+
+- Next.js (App Router)
+- React
+- Tailwind CSS
+
+### Backend
+
+- Supabase (PostgreSQL + Auth)
+- Rest API routes (Next.js)
+
+### Security
+
+- Row Level Security (RLS)
+- Role-Based Access Control (RBAC)
+
+---
+
+## 🔐 Authentication & Authorization
+
+- Supabase Auth handles signup/login
+- Profiles table stores user roles
+- Admin access restricted to authorized users
+
+---
+
+## 📊 Database Structure (Simplified)
+
+### universities
+
+- name
+- country
+- degree
+- tuition (USD)
+- ielts_min
+- scholarship_amount
+- application_link
+
+### profiles
+
+- id (linked to auth.users)
+- email
+- role (admin/user)
+
+---
+
+## ⚙️ Key Technical Highlights
+
+- Dynamic query building for filtering
+- Ranking algorithm for best match
+- Secure API routes with validation
+- Clean separation of frontend and backend logic
+- Environment-based configuration
+
+---
+
+## 📈 Future Improvements
+
+- Save favorite universities
+- Personalized recommendations
+- Premium features (Advanced filters, rankings)
+- Automated data ingestion from APIs
+
+## 🧪 Local Setup
 
 ```bash
+git clone https://github.com/chunogreg/global-skill-passport.git
+cd global-skill-passport
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 🔑 Environmental Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+create `.env.local`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+NEXT_pUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
 
-## Learn More
+### 🧠 What I Learned
 
-To learn more about Next.js, take a look at the following resources:
+- Designing scalable database structures
+- Implementing authentication & RBAC
+- Handling real-world messy data
+- Building production-ready full-stack apps
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 📬 Contact
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Feel free to connect or reach out:
 
-## Deploy on Vercel
+- LinkedIn: https://www.linkedin.com/in/gregory-chuno
+- Email: chunogreg@gmail.com
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### ⭐ If you like this project
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Give it a star ⭐ on gitHub

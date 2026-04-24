@@ -33,6 +33,8 @@ const AdminPage = () => {
         router.push("/login?redirect=/admin");
       } else if (role !== "admin") {
         router.push("/search"); //🚫 block non-admin
+      } else if (role === "admin") {
+        router.push("/admin");
       }
     }
   }, [user, role, loading, router]);
