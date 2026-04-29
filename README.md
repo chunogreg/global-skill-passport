@@ -149,7 +149,7 @@ npm install
 npm run dev
 ```
 
-### 🔑 Environmental Variables
+## 🔑 Environmental Variables
 
 create `.env.local`:
 
@@ -158,20 +158,16 @@ NEXT_pUBLIC_SUPABASE_URL=your_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
 ```
 
-### 🧠 What I Learned
+## 🧠 What I Learned
 
-- Designing scalable database structures
-- Implementing authentication & RBAC
-- Handling real-world messy data
-- Building production-ready full-stack apps
+- How to design a flexible database that can handle inconsistent real-world data
+- Implementing authentication & RBAC using Supabase
+- Handling incomplete and messy datasets from different sources
+- Balancing product features with simplicity for an MVP
 
-### 📬 Contact
+## 📬 Contact
 
 Feel free to connect or reach out:
 
 - LinkedIn: https://www.linkedin.com/in/gregory-chuno
 - Email: chunogreg@gmail.com
-
-### ⭐ If you like this project
-
-Give it a star ⭐ on gitHub

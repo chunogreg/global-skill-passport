@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signUp } from "@/lib/auth";
+import { supabase } from "../../../utils/supabase/client";
+//import { signUp } from "@/lib/auth";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ const SignupPage = () => {
 
   const handleSignup = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { error } = await signUp(email, password);
+    const { error } = await supabase.auth.signUp({ email, password });
     if (error) {
       alert(error.message);
     } else {

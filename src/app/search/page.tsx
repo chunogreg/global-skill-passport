@@ -1,27 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { NextResponse } from "next/server";
+//import { NextResponse } from "next/server";
 import { useEffect, useState } from "react";
 import { University } from "../types/university";
 import { SearchBody } from "../types/search";
 import { logout } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
-import { getCurrentUser } from "@/lib/auth";
+//import { getCurrentUser } from "@/lib/auth";
+//import { supabase } from    "@/lib/supabaseClient";
 
+import { supabase } from "../../../utils/supabase/client";
+
+export const dynamic = "force-dynamic";
 export default function SearchPage() {
   const [results, setResults] = useState<University[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    let mounted = true;
     const fetchUser = async () => {
-      const { data } = await getCurrentUser();
-      setUser(data.user);
+      const { data } = await supabase.auth.getSession();
+      if (mounted) {
+        setUser(data.session?.user ?? null);
+        setAuthLoading(false);
+      }
     };
     fetchUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      // if (event === "SIGNED_IN") {
+      if (mounted) {
+        setUser(session?.user ?? null);
+        // } else if (event === "SIGNED_OUT") {
+        //   setUser(null);
+        // }
+      }
+    });
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   interface myEvent {
@@ -46,7 +70,7 @@ export default function SearchPage() {
       sort: formData.get("sort"),
     };
 
-    setLoading(true);
+    setAuthLoading(true);
 
     const res = await fetch("/api/search", {
       method: "POST",
@@ -64,7 +88,7 @@ export default function SearchPage() {
       return;
     }
 
-    setLoading(false);
+    setAuthLoading(false);
 
     const calculateScore = (university: University, body: SearchBody) => {
       let score = 0;
@@ -143,8 +167,6 @@ export default function SearchPage() {
       explanation: getExplanation(uni, body),
     }));
 
-    //return NextResponse.json({ data: resultsWithScore });
-
     console.log("WITH SCORE: ", body);
     resultsWithScore.sort((a: University, b: University) => b.score - a.score);
 
@@ -152,7 +174,7 @@ export default function SearchPage() {
     setResults(resultsWithScore);
 
     setHasSearched(true);
-    return NextResponse.json({ data: resultsWithScore });
+    //return NextResponse.json({ data: resultsWithScore });
   };
 
   return (
@@ -161,7 +183,8 @@ export default function SearchPage() {
         {!user ? (
           <>
             {" "}
-            <Link href="/login">Login</Link> <Link href="/signup">Signup</Link>
+            <Link href="/login">Login</Link> |{" "}
+            <Link href="/signup">Signup</Link>
           </>
         ) : (
           <>
@@ -174,12 +197,14 @@ export default function SearchPage() {
           </>
         )}
       </div>
-      <h1 className="text-2xl font-bold">Find Universities Abroad</h1>{" "}
+
       <div className="max-w-4xl">
+        <h1 className="text-2xl font-bold text-center">
+          Find Universities Abroad
+        </h1>{" "}
         <p className="text-center text-gray-700 mt-2">
           Discover schools that match your budget and qualifications
         </p>
-
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <label>Discipline</label>
           <select
@@ -245,15 +270,14 @@ export default function SearchPage() {
           <div className="flex justify-between items-center">
             {" "}
             <button
-              disabled={loading}
-              className="bg-blue-500 text-white mt-4 mb-5 px-4 py-2"
+              disabled={authLoading}
+              className="bg-blue-500 text-white mt-4 mb-5 px-4 py-2 text-2xl hover:cursor-pointer active:text-lg"
             >
-              {loading ? "Searching . . ." : "Search"}
+              {authLoading ? "Searching . . ." : "Find Universities"}
             </button>
           </div>
         </form>
         {/* {loading && <p className="mt-3 mb-3">Searching . . .</p>} */}
-
         {results && results.length === 0 && hasSearched && (
           <p className=" text-red-500">
             No university found, Try adjusting your filters.
@@ -296,7 +320,7 @@ export default function SearchPage() {
                 </p>
                 <p>Application fee: $ {uni.application_fee_amount}</p>
               </div>
-              <a href={uni.url}>
+              <a href={uni.url} target="_blank">
                 <p className="text-blue-500 underline mt-3 ml-10">
                   {" "}
                   Apply here{" "}
@@ -306,6 +330,7 @@ export default function SearchPage() {
           ))}
         </div>
       </div>
+      <span className="flex justify-center">© 2026 Global Skill Passport</span>
     </main>
   );
 }
@@ -314,7 +339,7 @@ export function Logout() {
   const router = useRouter();
   const handleLogout = async () => {
     await logout();
-
+    router.refresh();
     router.push("/login");
   };
   return (

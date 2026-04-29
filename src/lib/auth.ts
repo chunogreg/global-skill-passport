@@ -1,12 +1,4 @@
-import { supabase } from "./supabaseClient";
-
-export const signUp = async (email: string, password: string) => {
-  return await supabase.auth.signUp({ email, password });
-};
-
-export const login = async (email: string, password: string) => {
-  return await supabase.auth.signInWithPassword({ email, password });
-};
+import { supabase } from "../../utils/supabase/client";
 
 export const logout = async () => {
   return await supabase.auth.signOut();
@@ -14,13 +6,6 @@ export const logout = async () => {
 // export const getCurrentUser = async () => {
 //   return await supabase.auth.getUser();
 // };
-
-export const getCurrentUser = async () => {
-  const { data, error } = await supabase.auth.getSession();
-
-  return { data: { user: data.session?.user ?? null }, error };
-};
-
 export const getUserWithRole = async () => {
   const { data: sessionData } = await supabase.auth.getSession();
 
