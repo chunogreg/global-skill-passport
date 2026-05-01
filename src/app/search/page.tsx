@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 //import { NextResponse } from "next/server";
 import { useEffect, useState } from "react";
 import { University } from "../types/university";
@@ -289,9 +290,15 @@ export default function SearchPage() {
               key={index}
               className="m-4 p-4 border-2 border-gray-300  bg-gray-100 rounded-2xl mb-4 w-68 shadow-2xl "
             >
-              <h2 className="text-lg font-bold text-gray-700 text-center">
-                {uni.name}
-              </h2>
+              <div className="flex items-center gap-2">
+                <img
+                  src={uni.logo_url}
+                  alt={uni.name}
+                  className="w-15 h-15 mr-5"
+                />
+
+                <h2 className="text-lg font-bold text-gray-700">{uni.name}</h2>
+              </div>
               <p className="mt-3 text-gray-500">
                 {" "}
                 {uni.city}, {uni.country}
@@ -321,7 +328,7 @@ export default function SearchPage() {
                 <p>Application fee: $ {uni.application_fee_amount}</p>
               </div>
               <a href={uni.url} target="_blank">
-                <p className="text-blue-500 underline mt-3 ml-10">
+                <p className="text-blue-500 underline mt-6 ml-10 ">
                   {" "}
                   Apply here{" "}
                 </p>
