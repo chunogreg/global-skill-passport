@@ -24,4 +24,5 @@ export interface University {
   explanation: Array<string>;
   cost_of_living: number;
   logo_url: string;
+  source: string;
 }

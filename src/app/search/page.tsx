@@ -288,7 +288,7 @@ export default function SearchPage() {
           {results.map((uni, index) => (
             <div
               key={index}
-              className="m-4 p-4 border-2 border-gray-300  bg-gray-100 rounded-2xl mb-4 w-68 shadow-2xl "
+              className="m-4 pr-2 p-4 border-2 border-gray-300  bg-gray-100 rounded-2xl mb-4 w-68 shadow-2xl "
             >
               <div className="flex items-center gap-2">
                 <img
@@ -328,13 +328,20 @@ export default function SearchPage() {
                 <p>Application fee: $ {uni.application_fee_amount}</p>
               </div>
               <a href={uni.url} target="_blank">
-                <p className="text-blue-500 underline mt-6 ml-10 ">
-                  {" "}
-                  Apply here{" "}
-                </p>
+                <p className="text-blue-500 underline mt-6 "> Apply here </p>
+
+                <div className="flex gap-1.5  font-light text-xs text-[11px] text-gray-500 mt-4 text italic">
+                  <span className="flex shrink-0">Source:</span>
+                  <span className="flex flex-wrap min-w-0 break-all pr-2">
+                    {uni.source}
+                  </span>
+                </div>
               </a>{" "}
             </div>
           ))}
+          <span className="flex px-3 mr-20 ml-auto text-gray-600 hover:bg-gray-200 rounded-lg">
+            <Feedback />
+          </span>
         </div>
       </div>
       <span className="flex justify-center">© 2026 Global Skill Passport</span>
@@ -356,5 +363,16 @@ export function Logout() {
     >
       Logout
     </span>
+  );
+}
+
+export function Feedback() {
+  return (
+    <div>
+      <a href="mailto:chunogreg@gmail.com?subject=Feedback from Global Skill Passport">
+        {" "}
+        Give Feedback
+      </a>
+    </div>
   );
 }
