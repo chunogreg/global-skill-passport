@@ -333,7 +333,7 @@ export default function SearchPage() {
               <a href={uni.url} target="_blank">
                 <p className="text-blue-500 underline mt-6 "> Apply here </p>
 
-                <div className="flex gap-1.5  font-light text-xs text-[11px] text-gray-500 mt-4 text italic">
+                <div className="flex gap-1.5  font-light text-xs text-[11px] text-gray-600 mt-4 text italic">
                   <span className="flex shrink-0">Source:</span>
                   <span className="flex flex-wrap min-w-0 break-all pr-2">
                     {uni.source}
@@ -406,9 +406,10 @@ export function Feedback() {
   };
 
   return (
-    <div className="flex px-3 gap-4  ml-auto mb-5">
+    <div className="flex flex-col items-center w-300 my-6 ">
       {!rated ? (
-        <div className="flex px-3 gap-4 mr-20 ml-auto mt-5">
+        <div>
+          <span>Was this helpful?</span>
           <button
             onClick={() => {
               setRated(true);
