@@ -210,7 +210,7 @@ export default function SearchPage() {
           <label>Discipline</label>
           <select
             name="discipline"
-            className="border p-2 w-full rounded mb-3 text-gray-600 "
+            className="border p-2 w-full rounded mb-3 text-gray-600 bg-gray-100 hover:bg-blue-100"
           >
             <option value="" className="text-gray-400">
               Select Discipline
@@ -235,7 +235,7 @@ export default function SearchPage() {
           <label>Country</label>
           <select
             name="country"
-            className="border p-2 w-full rounded mb-3  text-gray-600"
+            className="border p-2 w-full rounded mb-3  text-gray-600 bg-gray-100 hover:bg-blue-100"
           >
             <option value="" className="text-gray-600">
               Select Country
@@ -249,7 +249,7 @@ export default function SearchPage() {
           <label>Degree</label>
           <select
             name="degree"
-            className="border p-2 w-full rounded mb-3  text-gray-600 "
+            className="border p-2 w-full rounded mb-3  text-gray-600 bg-gray-100 hover:bg-blue-100"
           >
             <option value="">Degree-Type</option>
             <option value="Bachelor">Bachelor</option>
@@ -261,9 +261,12 @@ export default function SearchPage() {
             name="budget"
             type="number"
             placeholder="Max Budget (USD)"
-            className="border p-2 mb-3 w-full rounded"
+            className="border p-2 mb-3 w-full rounded bg-gray-100 hover:bg-blue-100"
           />
-          <select name="sort" className="border p-2 w-full rounded mt-3">
+          <select
+            name="sort"
+            className="border p-2 w-full rounded mt-3 bg-gray-100 hover:bg-blue-100"
+          >
             <option value="">Sort By</option>
             <option value="tuition_asc">Cheapeast Tuition</option>
             <option value="tuition_desc"> Most Expensive</option>
@@ -272,7 +275,7 @@ export default function SearchPage() {
             {" "}
             <button
               disabled={authLoading}
-              className="bg-blue-500 text-white mt-4 mb-5 px-4 py-2 text-2xl hover:cursor-pointer active:text-lg"
+              className="bg-[#41698c] text-white mt-4 mb-5 px-4 py-2 text-2xl hover:cursor-pointer active:text-lg hover:bg-[#4097e2]"
             >
               {authLoading ? "Searching . . ." : "Find Universities"}
             </button>
@@ -339,12 +342,12 @@ export default function SearchPage() {
               </a>{" "}
             </div>
           ))}
-          <span className="flex px-3 mr-20 ml-auto text-gray-600 hover:bg-gray-200 rounded-lg">
-            <Feedback />
-          </span>
+          <Feedback />
         </div>
       </div>
-      <span className="flex justify-center">© 2026 Global Skill Passport</span>
+      <span className="flex justify-center text-sm">
+        © 2026 Global Skill Passport
+      </span>
     </main>
   );
 }
@@ -367,12 +370,101 @@ export function Logout() {
 }
 
 export function Feedback() {
+  const [message, setMessage] = useState("");
+  const [rated, setRated] = useState<true | false>(false);
+  const [thanks, setThanks] = useState("");
+  const [rating, setRating] = useState<"Yes" | "No" | null>(null);
+
+  const handleFeedback = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rating: rating === "Yes" ? "yes" : "no",
+          message,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setThanks(" Thank you for your feedback! We appreciate your input.");
+        setMessage("");
+        setRating(null);
+        setTimeout(() => {
+          setThanks("");
+          setRated(false);
+        }, 6000);
+      } else {
+        console.error("Error", data.error);
+      }
+    } catch (err) {
+      console.error("Error submitting feedback:", err);
+    }
+  };
+
   return (
-    <div>
-      <a href="mailto:chunogreg@gmail.com?subject=Feedback from Global Skill Passport">
-        {" "}
-        Give Feedback
-      </a>
+    <div className="flex px-3 gap-4  ml-auto mb-5">
+      {!rated ? (
+        <div className="flex px-3 gap-4 mr-20 ml-auto mt-5">
+          <button
+            onClick={() => {
+              setRated(true);
+              setRating("Yes");
+            }}
+            className=" text-gray-600 hover:bg-gray-200 rounded-lg w-20"
+          >
+            {" "}
+            👍Yes{" "}
+          </button>{" "}
+          <button
+            onClick={() => {
+              setRated(true);
+              setRating("No");
+            }}
+            className=" text-gray-600 hover:bg-gray-200 rounded-lg w-20"
+          >
+            {" "}
+            👎 No{" "}
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleFeedback}>
+          <div className="flex px-3 gap-4 mr-20 ml-auto mt-5">
+            {rating === "Yes" ? (
+              <p>What did you like?</p>
+            ) : (
+              <p>What can we improve?</p>
+            )}
+            <textarea
+              className="border font-bold w-80 rounded text-gray-500"
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
+            />
+
+            <button
+              type="submit"
+              className="bg-cyan-600 px-2.5 text-white hover:bg-cyan-50 hover:text-cyan-700 hover:border hover:border-cyan-700 active:animate-bounce hover:cursor-pointer"
+            >
+              Submit
+            </button>
+            <button
+              className="border px-2 bg-orange-200 hover:bg-orange-500 active:animate-bounce hover:cursor-pointer"
+              onClick={() => {
+                setRating(null);
+                setRated(false);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+      <p className="text italic text-brown-700 mr-7 w-full">{thanks}</p>
     </div>
   );
 }
