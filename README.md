@@ -32,7 +32,7 @@ Global Skill Passport provides:
 
 ## ✨ Features
 
-### 🔍 Saerch & Filtering
+### 🔍 Search & Filtering
 
 - Filter by country, degree, discipline
 - Budget-based filtering
@@ -75,7 +75,7 @@ Global Skill Passport provides:
 
 ---
 
-## 🧱 Teck Stack
+## 🧱 Tech Stack
 
 ### Frontend
 
